@@ -1,0 +1,40 @@
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="navigateToHome()">
+            <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="navigateToHome()">
+        </div>
+        <button class="btn-logout" (click)="navigateToHome()">Inicio</button>
+    </header>
+   
+    <div class="container">
+        <h2>Especialidad</h2>
+        <div class="specialties">
+            <!-- Iterar sobre las especialidades existentes -->
+            <div class="specialty" *ngFor="let especialidad of especialidades; let i = index">
+                <img 
+                    src="../../assets/Imagenes/especialidades.png" 
+                    alt="Icono Especialidad" 
+                    (click)="goToModifySchedule(especialidad)">
+                <button>{{ especialidad }}</button>
+                <!-- Botón de eliminar especialidad -->
+                <button class="delete-button" (click)="deleteSpecialty(i)">Eliminar</button>
+            </div>
+            
+            <!-- Botón para añadir una nueva especialidad -->
+            <div class="specialty add" (click)="openAddModal()">
+                <img src="../../assets/Imagenes/+.png" alt="Añadir Especialidad">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para añadir nueva especialidad -->
+    <div id="addModal" class="modal" *ngIf="modalOpen">
+        <div class="modal-content">
+            <span class="close" (click)="closeAddModal()">&times;</span>
+            <h3>Añadir Nueva Especialidad</h3>
+            <input type="text" [(ngModel)]="newSpecialty" placeholder="Nombre de la Especialidad">
+            <button (click)="addSpecialty()">Añadir Especialidad</button>
+        </div>
+    </div>
+</body>

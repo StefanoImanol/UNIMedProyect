@@ -1,0 +1,193 @@
+html, body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f3f4;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Asegura que el body cubra al menos el 100% de la altura de la pantalla */
+}
+header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 80px; /* Añade margen superior para dejar espacio para el encabezado */
+    margin-left: auto;
+    margin-right: auto; /* Centra el contenedor */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px; /* Ajusta este valor para mover los logos a la derecha */
+}
+
+.logo-figura {
+    width: 50px; /* Ajusta el tamaño según necesites */
+    margin-right: 1px;
+    filter: drop-shadow(3px 4px 2px rgba(0, 0, 0, 0.4));
+    cursor: pointer;
+}
+
+.logo-texto {
+    width: 130px; /* Ajusta el tamaño según necesites */
+    filter: drop-shadow(3px 4px 2px rgba(0, 0, 0, 0.4));
+    cursor: pointer;
+}
+
+.inicio {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.content {
+    margin-top: 30px;
+    text-align: left;
+}
+
+h2 {
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.doctors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.doctor {
+    width: 180px;
+    text-align: center;
+}
+
+.doctor img {
+    width: 100%;
+    max-width: 120px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.doctor button {
+    background-color: #a42323;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.doctor span {
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: flex; /* Asegúrate de que sea flex para que se muestre */
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+  }
+  
+.modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #a42323;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-content button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+img {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  
+.doctor.add {
+    pointer-events: auto;
+  }
+.delete-button {
+    background-color: #ffffff !important;
+    color: #a52424 !important;
+    border: 1px solid #a52424 !important;
+    padding: 5px 10px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    margin-top: 5px !important;
+    margin-left: 0px !important;
+    transition: background-color 0.3s, color 0.3s !important;
+}
+
+.delete-button:hover {
+    background-color: #a52424 !important;
+    color: #ffffff !important;
+}

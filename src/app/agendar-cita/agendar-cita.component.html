@@ -1,0 +1,65 @@
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="goToHome()">
+            <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="goToHome()">
+        </div>
+    </header>
+    <main class="content">
+        <div class="appointment-container">
+            <h2>Agendar nueva cita</h2>
+            <hr>
+            <div class="appointment-content">
+                <!-- Columna Izquierda -->
+                <div class="left-column">
+                    <div class="patient-info">
+                        <label>Paciente</label>
+                        <div class="locked-field">
+                            <input type="text" id="nombrePaciente" [value]="nombrePaciente" disabled>
+                            <span class="lock-icon">🔒</span>
+                        </div>
+                        <div class="locked-field">
+                            <input type="text" id="apellidoPaciente" [value]="apellidoPaciente" disabled>
+                            <span class="lock-icon">🔒</span>
+                        </div>
+                    </div>
+                    <div class="doctor-info">
+                        <label>Médico</label>
+                        <select id="especialidad" class="select-field">
+                            <option value="">Especialidad</option>
+                            <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad }}</option>
+                        </select>
+                        <select id="medico" class="select-field">
+                            <option value="">Médicos</option>
+                            <option *ngFor="let medico of medicos" [value]="medico">{{ medico }}</option>
+                        </select>
+                    </div>
+                    <div class="availability-section">
+                        <label>Horarios Disponibles</label>
+                        <div class="availability-content">
+                            <div id="calendar-container" class="calendar"></div> <!-- Contenedor fijo del calendario -->
+                            <div class="time-slots">
+                                <button class="time-slot" *ngFor="let horario of horarios" 
+                                        [class.unavailable]="!horario.disponible"
+                                        [class.selected]="horario.seleccionado"
+                                        (click)="seleccionarHorario(horario)">
+                                    {{ horario.hora }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Columna Derecha -->
+                <div class="right-column">
+                    <img src="../../assets/Imagenes/Agendar.jpg" alt="Agendar" class="appointment-image">
+                    <div class="action-buttons">
+                        <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
+                        <button class="btn-save" (click)="guardarCita()">Guardar</button>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+  </body>
+  

@@ -1,0 +1,32 @@
+<body>
+    <header>
+        <div class="logo-container">
+        <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="navigateToHome()" />
+        <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="navigateToHome()" />
+        </div>
+        <button class="btn-inicio" (click)="navigateToHome()">Inicio</button>
+    </header>
+    
+    <div class="container">
+        <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Paciente</th>
+                <th>Fecha consulta</th>
+                <th>Hora consulta</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let paciente of agenda">
+                <td><img [src]="paciente.foto" alt="Foto"></td>
+                <td>{{ paciente.nombre }}</td>
+                <td>{{ paciente.fechaConsulta }}</td>
+                <td>{{ paciente.horaConsulta }}</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</body> 

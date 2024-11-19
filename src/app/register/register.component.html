@@ -1,0 +1,25 @@
+<body> 
+    <div class="container">
+        <div class="logo">
+            <img src="../../assets/Imagenes/UNIMed.png" alt="UNIMed Logo" class="unimed-logo">
+        </div>
+        <div class="register-box">
+            <h2><b>Crea una nueva cuenta</b></h2>
+            <hr>
+            <form>
+                <div class="input-group">
+                    <input type="text" placeholder="Nombre">
+                    <input type="text" placeholder="Apellido">
+                </div>
+                <div class="input-group">
+                    <input type="date" placeholder="Fecha Nacimiento">
+                    <input type="text" placeholder="Código">
+                </div>
+                <input type="email" placeholder="Correo universitario">
+                <input type="password" placeholder="Contraseña">
+                <button type="button" class="btn-register" (click)="onRegister()">Registrarse</button>
+                <button type="button" class="btn-back" (click)="onBack()">Regresar</button>
+            </form>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,39 @@
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="router.navigate(['/home-paciente'])">
+            <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="router.navigate(['/home-paciente'])">
+        </div>
+        <button class="btn-logout" (click)="router.navigate(['/home-paciente'])">Inicio</button>
+        </header>
+    <div class="container">
+        <main class="profile-content">
+        <div class="sidebar">
+            <div class="profile-picture">
+                <img [src]="profileImage" alt="Foto de perfil" id="profileImage">
+                <label for="fileUpload" class="camera-icon">
+                    <img src=".../../assets/Imagenes/Camara.png" alt="Cambiar foto" style="width: 24px; height: 24px;">
+                </label>
+                <input type="file" id="fileUpload" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+            </div>
+            <button class="sidebar-button" (click)="viewProfile()">Datos Personales</button>
+            <button class="sidebar-button active">Próxima Cita</button>
+        </div>
+        
+        <div class="details-panel">
+            <h2>Próxima Cita...</h2>
+            <hr>
+            <div class="appointment-details">
+            <p><strong>Día:</strong> {{ citaData.dia }}</p>
+            <p><strong>Hora:</strong> {{ citaData.hora }}</p>
+            <p><strong>Especialidad:</strong> {{ citaData.especialidad }}</p>
+            <p><strong>Doctor:</strong> {{ citaData.doctor }}</p>
+            </div>
+            <div class="form-buttons">
+            <button class="btn-reprogramar" (click)="reprogramarCita()">Reprogramar</button>
+            <button class="btn-cancel" (click)="cancelarCita()">Cancelar Cita</button>
+            </div>
+        </div>
+        </main>
+    </div>
+</body>

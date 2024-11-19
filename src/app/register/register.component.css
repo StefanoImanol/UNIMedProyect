@@ -1,0 +1,104 @@
+/* register.component.css */
+html, body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f3f4;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Asegura que el body cubra al menos el 100% de la altura de la pantalla */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.unimed-logo {
+    width: 300px;
+    margin-bottom: 20px;
+    display: block;
+    filter: drop-shadow(5px 7px 4px rgba(0, 0, 0, 0.4));
+}
+
+.register-box {
+    width: 350px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.register-box h2 {
+    font-size: 20px;
+    color: #333;
+    margin: 10px 0 20px;
+    font-weight: normal;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 48%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.btn-register {
+    background-color: #4CAF50;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.btn-register:hover {
+    background-color: #45a049;
+}
+
+.btn-back {
+    background-color: #ffffff;
+    color: #a52424;
+    padding: 10px;
+    border: 1px solid #a52424;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-back:hover {
+    background-color: #f9f3f4;
+}

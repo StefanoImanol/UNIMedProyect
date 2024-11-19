@@ -1,0 +1,138 @@
+/* Login.css */
+html, body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f3f4;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; /* Asegura que el body cubra al menos el 100% de la altura de la pantalla */
+}
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.dbu-logo {
+    width: 240px;
+    margin-left: 40px;
+    filter: drop-shadow(5px 7px 4px rgba(0, 0, 0, 0.4)); /* Sombra suave alrededor de la forma */
+}
+
+
+
+.container {
+    display: flex;
+    justify-content: center; /* Separa los elementos al máximo dentro del contenedor */
+    align-items: center;
+    width: 80%; /* Ajusta el ancho del contenedor para que los elementos estén más separados */
+    max-width: 1200px;
+    margin: 0 auto; /* Centra el contenedor en la página */
+    height: 100vh;
+}
+
+.logo {
+    text-align: center;
+    margin-right: 20px;
+}
+
+
+.unimed-logo {
+    width: 350px;
+    display: block;
+    filter: drop-shadow(5px 7px 4px rgba(0, 0, 0, 0.4)); /* Sombra suave alrededor de la forma */
+}
+
+
+.login-box {
+    width: 300px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    margin-left: 200px; /* Mueve el formulario hacia la derecha */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Estilo unificado para ambos campos de entrada */
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: background-color 0.3s, border-color 0.3s; /* Suaviza el cambio */
+}
+
+/* Cambia el color de fondo y borde cuando el campo está en foco */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="text"]:not(:placeholder-shown),
+input[type="password"]:not(:placeholder-shown) {
+    background-color: #ffe6e6; /* Fondo rojo claro */
+    border-color: #ff4d4d; /* Borde rojo oscuro */
+    outline: none; /* Quita el borde predeterminado */
+}
+
+
+.btn-login {
+    background-color: #a52424;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.btn-login:hover {
+    background-color: #8f1e1e;
+}
+
+.forgot-password {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 15px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.btn-create-account {
+    background-color: #4CAF50;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-create-account:hover {
+    background-color: #45a049;
+}

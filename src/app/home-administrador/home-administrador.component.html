@@ -1,0 +1,19 @@
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="goToHome()">
+            <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="goToHome()">
+        </div>
+        <button class="btn-logout" (click)="logout()">Salir</button>
+    </header>
+    <main class="content">
+        <div class="card">
+            <img src="../../assets/Imagenes/modificar.png" alt="Modificar Especialidades" class="icon">
+            <button class="btn-card" (click)="modify()">Modificar</button>
+        </div>
+        <div class="card">
+            <img src="../../assets/Imagenes/horarios.avif" alt="Ver Cita" class="icon">
+            <button class="btn-card" (click)="appointments()">Citas</button>
+        </div>
+    </main>
+</body>
