@@ -1,0 +1,28 @@
+Para el frontend:
+1. instalar nodjs desde la web
+2. verificar:
+	PS C:\Users\ramir> node -v
+	v22.11.0
+	PS C:\Users\ramir> npm -v
+	10.9.0
+3. instalar angula:
+	PS C:\Users\ramir> npm install -g @angular/cli
+4.rederigirte:
+	PS C:\Users\ramir> cd C:\Users\ramir\UNIMedProyect
+5. instalar npm:
+	PS C:\Users\ramir\UNIMedProyect> npm install
+6.  ng serve
+
+Para el backend:
+1. PS C:\Users\ramir\UNIMedProyect-Backend> python -m venv venv
+2. PS C:\Users\ramir\UNIMedProyect-Backend> dir .\venv
+3. PS C:\Users\ramir\UNIMedProyect-Backend> .\venv\Scripts\Activate.ps1
+4. (venv) PS C:\Users\ramir\UNIMedProyect-Backend> pip install django
+5. (venv) PS C:\Users\ramir\UNIMedProyect-Backend> pip install djangorestframework
+6. (venv) PS C:\Users\ramir\UNIMedProyect-Backend> pip install django-cors-headers
+7. (venv) PS C:\Users\ramir\UNIMedProyect-Backend> pip install psycopg[binary]
+8. (venv) PS C:\Users\ramir\UNIMedProyect-Backend> pip show psycopg
+9. (venv) PS C:\Users\ramir\UNIMedProyect-Backend> pip install requests
+10. (venv) PS C:\Users\ramir\UNIMedProyect-Backend>  python manage.py runserver
+
+para iniciar solo el 3 y 10
