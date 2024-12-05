@@ -1,40 +1,46 @@
 <body>
     <header>
-        <div class="logo-container">
-            <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="navigateToHome()">
-            <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="navigateToHome()">
-        </div>
-    <button class="btn-logout" (click)="navigateToHome()">Inicio</button>
+      <div class="logo-container">
+        <img src="../../assets/Imagenes/LOGO2.png" alt="Logo Figura" class="logo-figura" (click)="navigateToHome()">
+        <img src="../../assets/Imagenes/UNIMed.png" alt="Logo Texto" class="logo-texto" (click)="navigateToHome()">
+      </div>
+      <button class="btn-logout" (click)="navigateToHome()">Inicio</button>
     </header>
     <div class="container">
-       
-    
-        <main class="profile-content">
+      <main class="profile-content">
         <div class="sidebar">
-            <div class="profile-picture">
+          <div class="profile-picture">
             <img [src]="profileImage" alt="Foto de perfil" id="profileImage">
             <label for="fileUpload" class="camera-icon">
-                <img src=".../../assets/Imagenes/Camara.png" alt="Cambiar foto" style="width: 24px; height: 24px;">
+              <img src="../../assets/Imagenes/Camara.png" alt="Cambiar foto" style="width: 24px; height: 24px;">
             </label>
             <input type="file" id="fileUpload" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
-            </div>
-            <button class="sidebar-button active">Datos Personales</button>
-            <button class="sidebar-button" (click)="proximaCita()">Próxima Cita</button>
+          </div>
+          <button class="sidebar-button active">Datos Personales</button>
+          <button class="sidebar-button" (click)="proximaCita()">Próxima Cita</button>
         </div>
-    
         <div class="details-panel">
-            <h2>Datos Personales</h2>
-            <hr>
-            <div class="form-group" *ngFor="let field of fields">
+          <h2>Datos Personales</h2>
+          <hr>
+          <div class="form-group" *ngFor="let field of fields">
             <label [for]="field.id">{{ field.label }}</label>
-            <input type="text" [id]="field.id" [(ngModel)]="field.value" [readOnly]="field.readOnly" [placeholder]="field.placeholder" [style.backgroundColor]="field.readOnly ? '#f9f9f9' : '#ffffff'">
+            <input
+              type="text"
+              [id]="field.id"
+              [(ngModel)]="field.value"
+              [readOnly]="field.readOnly"
+              [placeholder]="field.placeholder"
+              [pattern]="field.pattern || '.*'"
+              [style.backgroundColor]="field.readOnly ? '#f9f9f9' : '#ffffff'"
+            >
             <button (click)="toggleEdit(field)">{{ field.readOnly ? 'Editar' : 'Guardar' }}</button>
-            </div>
-            <div class="form-buttons">
+          </div>
+          <div class="form-buttons">
             <button class="btn-cancel" (click)="cancelChanges()">Cancelar</button>
             <button class="btn-save" (click)="saveChanges()">Guardar</button>
-            </div>
+          </div>
         </div>
-        </main>
+      </main>
     </div>
-</body>
+  </body>
+  

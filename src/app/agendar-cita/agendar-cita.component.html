@@ -25,14 +25,16 @@
                     </div>
                     <div class="doctor-info">
                         <label>Médico</label>
-                        <select id="especialidad" class="select-field">
+                        <select id="especialidad" class="select-field" [(ngModel)]="especialidadSeleccionada" (change)="cargarMedicos()">
                             <option value="">Especialidad</option>
-                            <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad }}</option>
-                        </select>
-                        <select id="medico" class="select-field">
+                            <option *ngFor="let especialidad of especialidades" [value]="especialidad.especialidad_id">{{ especialidad.nombre_especialidad }}</option>
+                          </select>                        
+                        <select id="medico" class="select-field" [(ngModel)]="medicoSeleccionado">
                             <option value="">Médicos</option>
-                            <option *ngFor="let medico of medicos" [value]="medico">{{ medico }}</option>
-                        </select>
+                            <option *ngFor="let medico of medicos" [value]="medico.usuario_id">{{ medico.usuario__nombre }} {{ medico.usuario__apellidos }}</option>
+                          </select>
+                          
+                          
                     </div>
                     <div class="availability-section">
                         <label>Horarios Disponibles</label>

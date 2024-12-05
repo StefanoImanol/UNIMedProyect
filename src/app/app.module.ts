@@ -1,3 +1,5 @@
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CredentialsInterceptor } from './interceptors/credentials.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,6 +25,8 @@ import { HomeAdministradorComponent } from './home-administrador/home-administra
 import { CitasComponent } from './citas/citas.component';
 import { ModificarEspecialidadesComponent } from './modificar-especialidades/modificar-especialidades.component';
 import { ModificarHorarioComponent } from './modificar-horario/modificar-horario.component';
+import { ApiService } from './services/api.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -50,9 +54,18 @@ import { ModificarHorarioComponent } from './modificar-horario/modificar-horario
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     CommonModule // Asegúrate de importar CommonModule aquí
+    
   ],
-  providers: [],
+  providers: [
+    ApiService,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: CredentialsInterceptor,
+    multi: true
+  }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

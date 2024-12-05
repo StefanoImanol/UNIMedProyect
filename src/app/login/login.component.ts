@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -13,38 +13,40 @@ export class LoginComponent {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  goToRegister() {
-    this.router.navigate(['/register']);
-  }
-
   login() {
-    if (!this.email || !this.password) {
-        alert('Por favor, completa todos los campos.');
-        return;
-    }
-
+    console.log('Inicio de login'); // <-- Depuración
+  
     const payload = {
-        email: this.email,
-        password: this.password
+      correo: this.email,
+      password: this.password
     };
-
-    this.http.post('http://127.0.0.1:8000/login/', payload, {
-      headers: { 'Content-Type': 'application/json' }
-    }).subscribe({
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    this.http.post('http://127.0.0.1:8000/api/token/', payload, { headers }).subscribe({
       next: (response: any) => {
-        console.log('Login exitoso:', response);
-        if (response.redirect === 'home-administrador') {
-          this.router.navigate(['/home-administrador']);
-        } else if (response.redirect === 'home-paciente') {
-          this.router.navigate(['/home-paciente']);
-        } else if (response.redirect === 'home-medico') {
-          this.router.navigate(['/home-medico']);
-        }
+        console.log('Respuesta del servidor:', response); // <-- Depuración
+        const { access, refresh } = response;
+        localStorage.setItem('accessToken', access);
+        localStorage.setItem('refreshToken', refresh);
+        console.log('Tokens guardados'); // <-- Depuración
+  
+        this.router.navigate(['/home-paciente']).then(() => {
+          console.log('Redirección exitosa a /home-paciente'); // <-- Depuración
+        }).catch((error) => {
+          console.error('Error en la redirección:', error); // <-- Depuración
+        });
       },
       error: (error) => {
-        console.error('Error en el inicio de sesión:', error);
+        console.error('Error en el inicio de sesión:', error); // <-- Depuración
         alert('Credenciales incorrectas o error de conexión.');
       }
     });
+  }
+  
+
+  goToRegister() {
+    this.router.navigate(['/register']); // Redirige a la página de registro.
   }
 }

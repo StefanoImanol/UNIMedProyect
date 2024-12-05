@@ -6,20 +6,20 @@
         <div class="register-box">
             <h2><b>Crea una nueva cuenta</b></h2>
             <hr>
-            <form>
+            <form #registerForm="ngForm">
                 <div class="input-group">
-                    <input type="text" placeholder="Nombre">
-                    <input type="text" placeholder="Apellido">
+                    <input type="text" name="nombre" [(ngModel)]="nombre" placeholder="Nombre" required>
+                    <input type="text" name="apellidos" [(ngModel)]="apellidos" placeholder="Apellidos">
                 </div>
                 <div class="input-group">
-                    <input type="date" placeholder="Fecha Nacimiento">
-                    <input type="text" placeholder="Código">
+                    <input type="date" name="fechaNacimiento" [(ngModel)]="fechaNacimiento" placeholder="Fecha de Nacimiento" required>
+                    <input type="text" name="codigo" [(ngModel)]="codigo" placeholder="Código" required>
                 </div>
-                <input type="email" placeholder="Correo universitario">
-                <input type="password" placeholder="Contraseña">
-                <button type="button" class="btn-register" (click)="onRegister()">Registrarse</button>
+                <input type="email" name="correo" [(ngModel)]="correo" placeholder="Correo Universitario" pattern="^[a-zA-Z0-9._%+-]+@uni\.pe$" required>
+                <input type="password" name="contrasena" [(ngModel)]="contrasena" placeholder="Contraseña" minlength="6" required>
+                <button type="button" class="btn-register" [disabled]="!registerForm.valid" (click)="onRegister()">Registrarse</button>
                 <button type="button" class="btn-back" (click)="onBack()">Regresar</button>
-            </form>
+            </form>            
         </div>
     </div>
 </body>

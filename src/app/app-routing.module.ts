@@ -17,13 +17,13 @@ import { HomeAdministradorComponent } from './home-administrador/home-administra
 import { CitasComponent } from './citas/citas.component';
 import { ModificarEspecialidadesComponent } from './modificar-especialidades/modificar-especialidades.component';
 import { ModificarHorarioComponent } from './modificar-horario/modificar-horario.component';
+import { AuthGuard } from './auth.guard';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'confirmacion', component: ConfirmacionComponent },
   { path: 'perfil-paciente', component: PerfilPacienteComponent },
-  { path: 'home-paciente', component: HomePacienteComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'home-paciente', component: HomePacienteComponent, canActivate: [AuthGuard] },
   { path: 'agendar-cita', component: AgendarCitaComponent },
   { path: 'confirmacion-cita', component: ConfirmacionCitaComponent },
   { path: 'proxima-cita', component: ProximaCitaComponent },
@@ -36,6 +36,7 @@ const routes: Routes = [
   { path: 'citas', component: CitasComponent },
   { path: 'modificar-especialidades', component: ModificarEspecialidadesComponent },
   { path: 'modificar-horario/:especialidad', component: ModificarHorarioComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 
 ];
 

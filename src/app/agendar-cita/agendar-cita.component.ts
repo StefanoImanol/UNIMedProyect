@@ -2,7 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import moment from 'moment';
 import Pikaday from 'pikaday';
-import 'pikaday/css/pikaday.css';
+import { ApiService } from '../services/api.service'; // Cambiar a ApiService
 
 interface Horario {
   hora: string;
@@ -15,73 +15,124 @@ interface Horario {
   templateUrl: './agendar-cita.component.html',
   styleUrls: ['./agendar-cita.component.css']
 })
-
 export class AgendarCitaComponent implements AfterViewInit {
   nombrePaciente = 'Nombre del Paciente';
   apellidoPaciente = 'Apellido del Paciente';
-  especialidades: string[] = ['Cardiología', 'Dermatología', 'Pediatría']; // Datos simulados
-  medicos: string[] = ['Dr. Pérez', 'Dr. Gómez', 'Dr. López']; // Datos simulados
-  horarios: Horario[] = [
-    { hora: '10:00 am', disponible: true, seleccionado: false },
-    { hora: '11:00 am', disponible: true, seleccionado: false },
-    { hora: '12:00 pm', disponible: false, seleccionado: false },
-    { hora: '1:00 pm', disponible: true, seleccionado: false },
-    { hora: '2:00 pm', disponible: true, seleccionado: false }
-  ]; // Datos simulados
-  especialidadSeleccionada!: string;
-  medicoSeleccionado!: string;
+  pacienteId!: number; // Ahora incluye la propiedad pacienteId
+  especialidades: any[] = [];
+  medicos: any[] = [];
+  horarios: Horario[] = [];
+  especialidadSeleccionada!: number;
+  medicoSeleccionado!: number;
+  fechaSeleccionada!: string;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {}
 
   ngAfterViewInit() {
     this.inicializarCalendario();
+    this.cargarDatosPaciente(); // Carga los datos del paciente y su ID
+    this.cargarEspecialidades();
   }
 
   inicializarCalendario() {
     new Pikaday({
-      bound: false, // Esto hace que el calendario esté fijo y no sea desplegable.
+      bound: false,
       field: document.getElementById('calendar-container'),
       format: 'YYYY-MM-DD',
       onSelect: (date) => {
-        const formattedDate = moment(date).format('YYYY-MM-DD');
-        console.log('Fecha seleccionada:', formattedDate);
-        this.cargarHorarios(formattedDate); // Llama a la función para cargar horarios según la fecha seleccionada.
+        this.fechaSeleccionada = moment(date).format('YYYY-MM-DD');
+        this.cargarHorarios();
       }
     });
   }
 
-
-  cargarHorarios(fecha: string) {
-    console.log('Horarios cargados para la fecha:', fecha); // Simula la carga de horarios
+  cargarDatosPaciente() {
+    this.apiService.obtenerDatosPaciente().subscribe((data: any) => {
+      this.nombrePaciente = data.nombre;
+      this.apellidoPaciente = data.apellidos;
+      this.pacienteId = data.id; // Asigna dinámicamente el ID del paciente
+    }, error => {
+      console.error("Error al obtener datos del paciente:", error);
+    });
   }
+
+  cargarEspecialidades() {
+    this.apiService.obtenerEspecialidades().subscribe((data: any) => {
+      this.especialidades = data;
+    });
+  }
+
+  cargarMedicos() {
+    if (!this.especialidadSeleccionada) return;
+    this.apiService.obtenerMedicosPorEspecialidad(this.especialidadSeleccionada).subscribe({
+      next: (data: any) => {
+        this.medicos = data;
+      },
+      error: (error) => {
+        console.error('Error al cargar médicos:', error);
+        this.medicos = [];
+      }
+    });
+  }
+
+  cargarHorarios() {
+    if (!this.medicoSeleccionado || !this.fechaSeleccionada) {
+      console.error('ID del médico o fecha no seleccionados');
+      return;
+    }
+  
+    this.horarios = []; // Limpia la lista de horarios antes de llenarla.
+  
+    this.apiService.obtenerHorariosDisponibles(this.medicoSeleccionado, this.fechaSeleccionada).subscribe({
+      next: (data: any) => {
+        this.horarios = data.map((h: any) => ({
+          hora: h.hora,
+          disponible: h.disponible,
+          seleccionado: false,
+        }));
+      },
+      error: (err) => {
+        console.error('Error al cargar horarios', err);
+      },
+    });
+  }
+  
 
   seleccionarHorario(horario: Horario) {
     this.horarios.forEach(h => h.seleccionado = false);
     horario.seleccionado = true;
   }
-  goToHome() {
-    this.router.navigate(['/home-paciente']);
-  }
-  cancelar() {
-    this.router.navigate(['/home-paciente']);
-  }
 
   guardarCita() {
     const horarioSeleccionado = this.horarios.find(h => h.seleccionado);
-    if (!horarioSeleccionado) {
-      alert('Por favor selecciona un horario.');
+    if (!horarioSeleccionado || !this.fechaSeleccionada || !this.medicoSeleccionado) {
+      alert('Por favor completa todos los campos.');
       return;
     }
+  
     const citaData = {
-      paciente: {
-        nombre: this.nombrePaciente,
-        apellido: this.apellidoPaciente
-      },
-      especialidad: this.especialidadSeleccionada,
-      medico: this.medicoSeleccionado,
-      horario: horarioSeleccionado.hora
+      medico_id: this.medicoSeleccionado,
+      fecha: this.fechaSeleccionada,
+      hora: horarioSeleccionado.hora,
     };
-    console.log('Cita guardada:', citaData);
-    this.router.navigate(['/confirmacion-cita']);
+  
+    this.apiService.crearCita(citaData).subscribe({
+      next: (response) => {
+        alert('Cita guardada exitosamente.');
+        this.router.navigate(['/confirmacion-cita']);
+      },
+      error: (error) => {
+        alert('Error al guardar la cita.');
+        console.error(error);
+      },
+    });
+  }
+  
+  goToHome() {
+    this.router.navigate(['/home-paciente']);
+  }
+
+  cancelar() {
+    this.router.navigate(['/home-paciente']);
   }
 }
