@@ -1,31 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-ver-agenda',
   templateUrl: './ver-agenda.component.html',
   styleUrls: ['./ver-agenda.component.css']
 })
-export class VerAgendaComponent {
-  agenda = [
-    { foto: '../../assets/Imagenes/UserAjustado.png', nombre: 'Juan Gonzales', fechaConsulta: '15/10/2024', horaConsulta: '10:00 am' },
-    { foto: '../../assets/Imagenes/UserAjustado.png', nombre: 'Maria Carranza', fechaConsulta: '16/10/2024', horaConsulta: '11:00 am' },
-    { foto: '../../assets/Imagenes/UserAjustado.png', nombre: 'Joel Arquinigo', fechaConsulta: '20/12/2024', horaConsulta: '11:00 am' },
-    { foto: '../../assets/Imagenes/UserAjustado.png', nombre: 'Cinthya Miranda', fechaConsulta: '01/06/2024', horaConsulta: '11:00 am' },
-    { foto: '../../assets/Imagenes/UserAjustado.png', nombre: 'Jair Sánchez', fechaConsulta: '25/04/2024', horaConsulta: '3:00 pm' }
-  ];
+export class VerAgendaComponent implements OnInit {
+  agenda: any[] = []; // Asegúrate de inicializarlo como un array vacío
+  defaultImage: string = '../../assets/Imagenes/UserAjustado.png'; // Imagen predeterminada
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {}
+
+  ngOnInit() {
+    this.cargarAgenda();
+  }
+
+  cargarAgenda() {
+    this.apiService.obtenerAgendaMedico().subscribe({
+      next: (data: any) => {
+        console.log('Datos de la agenda recibidos:', data);
+        // Valida que los datos estén completos antes de asignarlos
+        this.agenda = data.map((item: any) => ({
+          nombre: item.nombre || 'Desconocido',
+          fechaConsulta: item.fechaConsulta || 'Sin fecha',
+          horaConsulta: item.horaConsulta || 'Sin hora',
+          foto: this.defaultImage // Usa la imagen predeterminada
+        }));
+      },
+      error: (error) => {
+        console.error('Error al cargar la agenda:', error);
+      }
+    });
+  }
 
   navigateToHome() {
     this.router.navigate(['/home-medico']);
   }
-  ngOnInit() {
-    const hoy = new Date();
-    this.agenda = this.agenda.filter((paciente) => {
-      const fechaConsulta = new Date(paciente.fechaConsulta);
-      return fechaConsulta >= hoy;
-    });
-  }
-  
 }

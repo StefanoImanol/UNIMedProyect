@@ -10,22 +10,21 @@
     <div class="container">
         <h2>Especialidad</h2>
         <div class="specialties">
-            <!-- Iterar sobre las especialidades existentes -->
-            <div class="specialty" *ngFor="let especialidad of especialidades; let i = index">
-                <img 
-                    src="../../assets/Imagenes/especialidades.png" 
-                    alt="Icono Especialidad" 
-                    (click)="goToModifySchedule(especialidad)">
-                <button>{{ especialidad }}</button>
-                <!-- Botón de eliminar especialidad -->
-                <button class="delete-button" (click)="deleteSpecialty(i)">Eliminar</button>
+            <div class="specialty" *ngFor="let especialidad of especialidades">
+              <img 
+                src="../../assets/Imagenes/especialidades.png" 
+                alt="Icono Especialidad" 
+                (click)="goToModifySchedule(especialidad)"
+              />
+              <button>{{ especialidad.nombre_especialidad }}</button>
+            <button class="delete-button" (click)="deleteSpecialty(especialidad.especialidad_id)">Eliminar</button>
             </div>
-            
-            <!-- Botón para añadir una nueva especialidad -->
             <div class="specialty add" (click)="openAddModal()">
-                <img src="../../assets/Imagenes/+.png" alt="Añadir Especialidad">
+              <img src="../../assets/Imagenes/+.png" alt="Añadir Especialidad" />
             </div>
-        </div>
+          </div>
+          
+          
     </div>
 
     <!-- Modal para añadir nueva especialidad -->

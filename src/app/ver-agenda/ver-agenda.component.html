@@ -9,24 +9,25 @@
     
     <div class="container">
         <div class="table-container">
-        <table>
+          <table>
             <thead>
-            <tr>
+              <tr>
                 <th>Foto</th>
                 <th>Paciente</th>
                 <th>Fecha consulta</th>
                 <th>Hora consulta</th>
-            </tr>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let paciente of agenda">
+              <tr *ngFor="let paciente of agenda">
                 <td><img [src]="paciente.foto" alt="Foto"></td>
                 <td>{{ paciente.nombre }}</td>
                 <td>{{ paciente.fechaConsulta }}</td>
                 <td>{{ paciente.horaConsulta }}</td>
-            </tr>
+              </tr>
             </tbody>
-        </table>
+          </table>
         </div>
     </div>
+      
 </body> 

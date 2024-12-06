@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-modificar-horario',
@@ -7,83 +8,172 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./modificar-horario.component.css']
 })
 export class ModificarHorarioComponent implements OnInit {
-  selectedSpecialty = ''; // Especialidad seleccionada desde la URL
-  doctors = [
-    { name: 'Edward Soto', schedule: '8:00 - 12:00' },
-    { name: 'Cristian Bazán', schedule: '2:00 - 6:00' }
+  doctors: any[] = [];
+  editModalOpen = false;
+  addModalOpen = false;
+  selectedDoctor: any = null;
+  newDoctor = { name: '', email: '', password: '' };
+  selectedSpecialty: number = 0;
+  especialidad: string = ''; // Variable para almacenar el nombre de la especialidad
+  days = [
+    { name: 'Lunes', checked: false, startTime: '', endTime: '' },
+    { name: 'Martes', checked: false, startTime: '', endTime: '' },
+    { name: 'Miércoles', checked: false, startTime: '', endTime: '' },
+    { name: 'Jueves', checked: false, startTime: '', endTime: '' },
+    { name: 'Viernes', checked: false, startTime: '', endTime: '' },
+    { name: 'Sábado', checked: false, startTime: '', endTime: '' },
+    { name: 'Domingo', checked: false, startTime: '', endTime: '' }
   ];
 
-  editModalOpen = false; // Estado del modal de edición
-  addModalOpen = false; // Estado del modal de añadir
-  selectedDoctor: any = null; // Médico seleccionado para edición
-  newDoctor = { name: '', schedule: '', email: '', password: '' }; // Campos del nuevo médico
-
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit() {
-    // Capturar la especialidad seleccionada desde la URL
     this.route.paramMap.subscribe(params => {
-      this.selectedSpecialty = params.get('especialidad') || '';
+      const especialidadId = Number(params.get('especialidad')); // Convertir el parámetro a número
+      this.selectedSpecialty = especialidadId;
+      this.obtenerEspecialida(especialidadId); // Llamar a la función para cargar el nombre de la especialidad
+      this.cargarDoctores(especialidadId);
+    });
+  }
+obtenerEspecialida(especialidadId: number) {
+    this.apiService.obtenerEspecialida(especialidadId).subscribe({
+        next: (data: any) => {
+            this.especialidad = data.nombre_especialidad; // Asignar el nombre de la especialidad
+        },
+        error: err => console.error('Error al obtener la especialidad:', err)
+    });
+}
+  cargarDoctores(especialidadId: number) {
+    this.apiService.obtenerMedicosEspecialidades(especialidadId).subscribe({
+      next: (data: any) => {
+        console.log('Datos recibidos:', data); // Agrega este log
+        if (Array.isArray(data)) {
+          this.doctors = data.map((medico: any) => ({
+            id: medico.usuario_id,
+            name: `${medico.usuario__nombre} ${medico.usuario__apellidos || ''}`.trim(),
+            schedule: medico.horarios ? medico.horarios.map((horario: any) => ({
+                dia: horario.dia,
+                hora_inicio: horario.hora_inicio,
+                hora_fin: horario.hora_fin
+            })) : []
+        }));
+        } else {
+          console.error('Los datos recibidos no son un array:', data);
+          this.doctors = [];
+        }
+      },
+      error: err => {
+        console.error('Error al cargar los doctores:', err);
+        this.doctors = [];
+      }
     });
   }
 
-  // Navegar al home del administrador
-  navigateToHome() {
-    this.router.navigate(['/home-administrador']);
-  }
-
-  // Abrir el modal de edición
   openEditModal(doctor: any) {
-    if (doctor) {
-      this.selectedDoctor = { ...doctor };
-      this.editModalOpen = true; // Cambia el estado del modal
-    }
-  }
+    this.selectedDoctor = { ...doctor };
+    this.days.forEach(day => {
+        const schedule = Array.isArray(this.selectedDoctor.schedule)
+            ? this.selectedDoctor.schedule.find((s: any) => s.dia === day.name)
+            : null;
+        if (schedule) {
+            day.checked = true;
+            day.startTime = schedule.hora_inicio;
+            day.endTime = schedule.hora_fin;
+        } else {
+            day.checked = false;
+            day.startTime = '';
+            day.endTime = '';
+        }
+    });
+    this.editModalOpen = true;
+}
 
-  // Cerrar el modal de edición
+
   closeEditModal() {
     this.editModalOpen = false;
     this.selectedDoctor = null;
   }
 
-  // Guardar los cambios realizados al médico
-  saveEdit() {
-    const index = this.doctors.findIndex(doc => doc.name === this.selectedDoctor.name);
-    if (index > -1) {
-      this.doctors[index] = { ...this.selectedDoctor };
-    }
-    this.closeEditModal();
-    alert('Cambios guardados correctamente.');
-  }
-
-  // Abrir el modal para añadir un nuevo médico
   openAddModal() {
-    this.addModalOpen = true; // Cambia el estado del modal
+    this.newDoctor = { name: '', email: '', password: '' };
+    this.days.forEach(day => {
+      day.checked = false;
+      day.startTime = '';
+      day.endTime = '';
+    });
+    this.addModalOpen = true;
   }
 
-  // Cerrar el modal de añadir nuevo médico
   closeAddModal() {
     this.addModalOpen = false;
-    this.newDoctor = { name: '', schedule: '', email: '', password: '' };
   }
 
-  // Añadir un nuevo médico
+  saveEdit() {
+    const horarios = this.days
+      .filter(day => day.checked)
+      .map(day => ({
+        dia: day.name,
+        hora_inicio: day.startTime,
+        hora_fin: day.endTime
+      }));
+
+    this.apiService.editarMedico(this.selectedDoctor.id, {
+      nombre: this.selectedDoctor.name,
+      horarios
+    }).subscribe({
+      next: () => {
+        this.cargarDoctores(this.selectedSpecialty);
+        this.closeEditModal();
+      },
+      error: err => console.error('Error al actualizar el médico:', err)
+    });
+  }
+
   addDoctor() {
-    if (this.newDoctor.name && this.newDoctor.schedule && this.newDoctor.email && this.newDoctor.password) {
-      this.doctors.push({ name: this.newDoctor.name, schedule: this.newDoctor.schedule });
-      this.closeAddModal();
-      alert('Nuevo médico añadido correctamente.');
-    } else {
-      alert('Por favor, completa todos los campos.');
-    }
-  }
+    const horarios = this.days
+        .filter(day => day.checked)
+        .map(day => ({
+            dia: day.name,
+            hora_inicio: day.startTime,
+            hora_fin: day.endTime
+        }));
 
-  // Eliminar un médico
-  deleteDoctor(index: number) {
-    const confirmation = confirm(`¿Estás seguro de que deseas eliminar a ${this.doctors[index].name}?`);
-    if (confirmation) {
-      this.doctors.splice(index, 1); // Eliminar al médico del array
-      alert('Médico eliminado correctamente.');
-    }
+    this.apiService.crearMedico({
+        nombre: this.newDoctor.name,
+        correo: this.newDoctor.email,
+        contrasena: this.newDoctor.password, // Nota que se usa "contrasena" en lugar de "password"
+        especialidad_id: this.selectedSpecialty,
+        horarios
+    }).subscribe({
+        next: () => {
+            this.cargarDoctores(this.selectedSpecialty);
+            this.closeAddModal();
+        },
+        error: err => console.error('Error al crear médico:', err)
+    });
+}
+
+
+
+deleteDoctor(doctorId: number) {
+  if (!doctorId) {
+      console.error('El ID del médico es undefined o null');
+      return;
+  }
+  this.apiService.eliminarMedico(doctorId).subscribe({
+      next: () => this.cargarDoctores(this.selectedSpecialty),
+      error: (err) => console.error('Error al eliminar médico:', err)
+  });
+}
+
+
+
+
+  navigateToHome() {
+    this.router.navigate(['/home-administrador']);
   }
 }

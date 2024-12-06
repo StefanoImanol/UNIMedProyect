@@ -1,8 +1,8 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 import moment from 'moment';
 import Pikaday from 'pikaday';
-import 'pikaday/css/pikaday.css';
 
 interface Horario {
   hora: string;
@@ -19,19 +19,17 @@ export class ReprogramarCitaComponent implements AfterViewInit {
   nombrePaciente = 'Nombre del Paciente';
   apellidoPaciente = 'Apellido del Paciente';
   especialidad!: string;
-  medico!: string;
-  horarios: Horario[] = [
-    { hora: '10:00 am', disponible: true, seleccionado: false },
-    { hora: '11:00 am', disponible: true, seleccionado: false },
-    { hora: '12:00 pm', disponible: false, seleccionado: false },
-    { hora: '1:00 pm', disponible: true, seleccionado: false },
-    { hora: '2:00 pm', disponible: true, seleccionado: false }
-  ];  
+  medico!: number; // Cambiar a tipo `number` para el ID del médico
+  horarios: Horario[] = [];
+  fechaSeleccionada!: string;
+  citaId!: number; // ID de la cita que será reprogramada
   profileImage = '../../assets/Imagenes/UserAjustado.png';
-  constructor(private router: Router) {}
+
+  constructor(private router: Router, private apiService: ApiService) {}
 
   ngAfterViewInit() {
     this.inicializarCalendario();
+    this.cargarDatosCita();
   }
 
   inicializarCalendario() {
@@ -40,50 +38,69 @@ export class ReprogramarCitaComponent implements AfterViewInit {
       field: document.getElementById('calendar-container'),
       format: 'YYYY-MM-DD',
       onSelect: (date) => {
-        const formattedDate = moment(date).format('YYYY-MM-DD');
-        console.log('Fecha seleccionada:', formattedDate);
-        this.cargarHorarios(formattedDate);
+        this.fechaSeleccionada = moment(date).format('YYYY-MM-DD');
+        this.cargarHorarios();
       }
     });
   }
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.profileImage = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-  cargarHorarios(fecha: string) {
-    console.log('Horarios cargados para la fecha:', fecha); // Simula la carga de horarios
-    // Aquí puedes actualizar la lista de horarios en base a la fecha seleccionada
-  }
 
-  seleccionarHorario(horario: Horario) {
-    this.horarios.forEach(h => h.seleccionado = false); // Deseleccionar todos
-    horario.seleccionado = true; // Seleccionar el horario actual
+  cargarDatosCita() {
+    this.apiService.getProximaCita().subscribe({
+      next: (data: any) => {
+        this.especialidad = data.especialidad;
+        this.medico = data.medico_id; // ID del médico obtenido del backend
+        this.citaId = data.id; // ID de la cita
+      },
+      error: (err) => console.error('Error al cargar los datos de la cita:', err)
+    });
   }
   
 
-  confirmarReprogramacion() {
-    const horarioSeleccionado = this.horarios.find(h => h.seleccionado);
-    if (!horarioSeleccionado) {
-      alert('Por favor selecciona un horario.');
+  cargarHorarios() {
+    if (!this.fechaSeleccionada || !this.medico) {
+      console.error('Fecha seleccionada o ID del médico no disponibles.');
       return;
     }
-    const citaReprogramada = {
-      paciente: {
-        nombre: this.nombrePaciente,
-        apellido: this.apellidoPaciente
+
+    this.apiService.obtenerHorariosDisponibles(this.medico, this.fechaSeleccionada).subscribe({
+      next: (data: any) => {
+        this.horarios = data.map((h: any) => ({
+          hora: h.hora,
+          disponible: h.disponible,
+          seleccionado: false
+        }));
       },
-      especialidad: this.especialidad,
-      medico: this.medico,
-      nuevoHorario: horarioSeleccionado.hora
+      error: (err) => console.error('Error al cargar horarios:', err)
+    });
+  }
+
+  seleccionarHorario(horario: Horario) {
+    this.horarios.forEach(h => h.seleccionado = false);
+    horario.seleccionado = true;
+  }
+
+  confirmarReprogramacion() {
+    const horarioSeleccionado = this.horarios.find(h => h.seleccionado);
+    if (!this.fechaSeleccionada || !horarioSeleccionado) {
+      alert('Por favor selecciona una fecha y un horario.');
+      return;
+    }
+
+    const nuevaCitaData = {
+      fecha: this.fechaSeleccionada,
+      hora: horarioSeleccionado.hora
     };
-    console.log('Cita reprogramada:', citaReprogramada);
-    this.router.navigate(['/confirmacion-cita']);
+
+    this.apiService.reprogramarCita(this.citaId, nuevaCitaData).subscribe({
+      next: () => {
+        alert('Cita reprogramada exitosamente.');
+        this.router.navigate(['/confirmacion-cita']);
+      },
+      error: (err) => {
+        console.error('Error al reprogramar la cita:', err);
+        alert('No se pudo reprogramar la cita. Intenta nuevamente.');
+      }
+    });
   }
 
   regresar() {

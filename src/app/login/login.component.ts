@@ -14,38 +14,39 @@ export class LoginComponent {
   constructor(private http: HttpClient, private router: Router) {}
 
   login() {
-    console.log('Inicio de login'); // <-- Depuración
-  
     const payload = {
       correo: this.email,
-      password: this.password
+      password: this.password,
     };
+  
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     });
   
     this.http.post('http://127.0.0.1:8000/api/token/', payload, { headers }).subscribe({
       next: (response: any) => {
-        console.log('Respuesta del servidor:', response); // <-- Depuración
-        const { access, refresh } = response;
+        const { access, refresh, rol } = response; // Incluye el rol en la respuesta
         localStorage.setItem('accessToken', access);
         localStorage.setItem('refreshToken', refresh);
-        console.log('Tokens guardados'); // <-- Depuración
   
-        this.router.navigate(['/home-paciente']).then(() => {
-          console.log('Redirección exitosa a /home-paciente'); // <-- Depuración
-        }).catch((error) => {
-          console.error('Error en la redirección:', error); // <-- Depuración
-        });
+        // Redirige según el rol
+        if (rol === 'Paciente') {
+          this.router.navigate(['/home-paciente']);
+        } else if (rol === 'Medico') {
+          this.router.navigate(['/home-medico']);
+        } else if (rol === 'Administrador') {
+          this.router.navigate(['/home-administrador']);
+        } else {
+          alert('Rol no reconocido. Contacte con soporte.');
+        }
       },
       error: (error) => {
-        console.error('Error en el inicio de sesión:', error); // <-- Depuración
+        console.error('Error en el inicio de sesión:', error);
         alert('Credenciales incorrectas o error de conexión.');
-      }
+      },
     });
   }
   
-
   goToRegister() {
     this.router.navigate(['/register']); // Redirige a la página de registro.
   }

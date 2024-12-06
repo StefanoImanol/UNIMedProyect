@@ -7,16 +7,16 @@
     </header>
     <div class="container">
         <div class="content">
-            <h2>{{ selectedSpecialty }}</h2>
+            <h2>{{ especialidad }}</h2>
+
             <div class="doctors">
                 <!-- Iterar sobre los doctores -->
-                <div class="doctor" *ngFor="let doctor of doctors; let i = index">
+                <div class="doctor" *ngFor="let doctor of doctors">
                     <img src="../../assets/Imagenes/doc.png" alt="Doctor" (click)="openEditModal(doctor)">
                     <button>{{ doctor.name }}</button>
-                    <span>{{ doctor.schedule }}</span>
                     <!-- Botón para eliminar al médico -->
-                    <button class="delete-button" (click)="deleteDoctor(i)">Eliminar</button>
-                </div>
+                    <button class="delete-button" (click)="deleteDoctor(doctor.id)">Eliminar</button>
+                </div>                         
                 <!-- Botón para añadir un nuevo doctor -->
                 <div class="doctor add" (click)="openAddModal()">
                     <img src="../../assets/Imagenes/+.png" alt="Añadir Médico">
@@ -25,13 +25,22 @@
         </div>
     </div>
 
-    <!-- Modal para editar médico -->
+        <!-- Modal para editar médico -->
     <div id="editModal" class="modal" *ngIf="editModalOpen">
         <div class="modal-content">
             <span class="close" (click)="closeEditModal()">&times;</span>
             <h3>Editar Médico</h3>
             <input type="text" [(ngModel)]="selectedDoctor.name" placeholder="Nombre del Médico">
-            <input type="text" [(ngModel)]="selectedDoctor.schedule" placeholder="Horario">
+            <div *ngFor="let day of days">
+                <label>
+                    <input type="checkbox" [(ngModel)]="day.checked">
+                    {{ day.name }}
+                </label>
+                <div *ngIf="day.checked">
+                    <input type="time" [(ngModel)]="day.startTime" placeholder="Hora inicio">
+                    <input type="time" [(ngModel)]="day.endTime" placeholder="Hora fin">
+                </div>
+            </div>
             <button (click)="saveEdit()">Guardar Cambios</button>
         </div>
     </div>
@@ -42,10 +51,21 @@
             <span class="close" (click)="closeAddModal()">&times;</span>
             <h3>Añadir Nuevo Médico</h3>
             <input type="text" [(ngModel)]="newDoctor.name" placeholder="Nombre del Médico">
-            <input type="text" [(ngModel)]="newDoctor.schedule" placeholder="Horario">
-            <input type="email" [(ngModel)]="newDoctor.email" placeholder="Correo">
+            <input type="email" [(ngModel)]="newDoctor.email" placeholder="Correo" />
             <input type="password" [(ngModel)]="newDoctor.password" placeholder="Contraseña">
+            <div *ngFor="let day of days">
+                <label>
+                  <input type="checkbox" [(ngModel)]="day.checked">
+                  {{ day.name }}
+                </label>
+                <div *ngIf="day.checked">
+                  <input type="time" [(ngModel)]="day.startTime" placeholder="Hora inicio">
+                  <input type="time" [(ngModel)]="day.endTime" placeholder="Hora fin">
+                </div>
+            </div>
+              
             <button (click)="addDoctor()">Añadir Médico</button>
         </div>
     </div>
+
 </body>

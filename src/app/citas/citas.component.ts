@@ -1,25 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.component.html',
-  styleUrls: ['./citas.component.css']
+  styleUrls: ['./citas.component.css'],
 })
-export class CitasComponent {
-  citas = [
-    { doctor: 'Alberto Carranza', paciente: 'Maria Carranza', fecha: '16/10/2024', hora: '11:00 am', estado: true },
-    { doctor: 'Alberto Carranza', paciente: 'Juan Gonzales', fecha: '17/10/2024', hora: '10:00 am', estado: false },
-    { doctor: 'Alberto Carranza', paciente: 'Roberto Torres', fecha: '18/10/2024', hora: '10:00 am', estado: false },
-    { doctor: 'Alberto Carranza', paciente: 'Juan Gonzales', fecha: '19/10/2024', hora: '10:00 am', estado: true }
-  ];
+export class CitasComponent implements OnInit {
+  citas: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {}
+
+  ngOnInit() {
+    this.cargarCitas();
+  }
+
+  cargarCitas() {
+    this.apiService.obtenerTodasCitas().subscribe({
+      next: (data: any) => {
+        // Ordenar citas por fecha de más recientes a más antiguas
+        this.citas = data.sort((a: any, b: any) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+      },
+      error: (err) => {
+        console.error('Error al cargar las citas:', err);
+        alert('No se pudieron cargar las citas. Intenta nuevamente.');
+      },
+    });
+  }
 
   toggleEstado(cita: any) {
     cita.estado = !cita.estado;
-    console.log(`Estado de la cita para ${cita.paciente} actualizado a: ${cita.estado}`);
+  
+    // Llamada al API para actualizar el estado
+    this.apiService.cambiarEstadoCita(cita.id, { estado: cita.estado }).subscribe({
+      next: () => {
+        console.log(`Estado de la cita actualizado correctamente: ${cita.estado}`);
+      },
+      error: (err) => {
+        console.error('Error al actualizar el estado de la cita:', err);
+        alert('No se pudo actualizar el estado. Intente nuevamente.');
+        // Revertir el cambio local si falla la actualización
+        cita.estado = !cita.estado;
+      }
+    });
   }
+  
 
   navigateToHome() {
     this.router.navigate(['/home-administrador']);
